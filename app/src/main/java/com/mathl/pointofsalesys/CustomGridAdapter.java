@@ -1,6 +1,9 @@
 package com.mathl.pointofsalesys;
 
 import android.content.Context;
+import android.provider.SyncStateContract;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +13,12 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Neal on 8/9/2016.
  */
-public class CustomGridAdapter extends BaseAdapter implements Filterable {
+public class CustomGridAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<String> items;
@@ -52,8 +56,5 @@ public class CustomGridAdapter extends BaseAdapter implements Filterable {
         return position;
     }
 
-    @Override
-    public Filter getFilter() {
-        return null;
-    }
+
 }
