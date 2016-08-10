@@ -5,7 +5,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filterable;
@@ -34,9 +37,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final ArrayList<String> buttons = new ArrayList<String>();
-        GridView employeeGrid = (GridView) findViewById(R.id.gridView);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) findViewById(R.id.searchView);
+        final GridView employeeGrid = (GridView) findViewById(R.id.gridView);
         CustomGridAdapter gridAdapter;
 
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
@@ -55,18 +56,14 @@ public class MainActivity extends AppCompatActivity  {
         employeeGrid.setAdapter(gridAdapter);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, simple_list_item_1,buttons);
 //        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        employeeGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                adapter.getFilter().filter(s);
-                return false;
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                text.setText((String) (employeeGrid.getItemAtPosition(position)));
+                Log.i("ITEM_CLICKED", "" + (String) (employeeGrid.getItemAtPosition(position)));
             }
         });
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
