@@ -11,32 +11,48 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
-
+import android.widget.TextView;
+import android.widget.ImageView;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Neal on 8/9/2016.
  */
-public class CustomGridAdapter extends BaseAdapter {
-
+public class CustomGridAdapter extends BaseAdapter implements Filterable
+{
     private Context context;
     private ArrayList<String> items;
-    LayoutInflater inflater;
+    private ArrayList<String> filterList;
+    LayoutInflater mInflater;
+    TextView textView;
 
-    public CustomGridAdapter(Context context, ArrayList<String> items) {
+    public CustomGridAdapter(Context context, ArrayList<String> items)
+    {
         this.context = context;
         this.items = items;
-        inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.filterList = items;
+        mInflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.cell, null);
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
+        if (convertView == null)
+        {
+            convertView = mInflater.inflate(R.layout.cell, null);
         }
-        Button button = (Button) convertView.findViewById(R.id.grid_item);
-        button.setText(items.get(position));
+
+        // TextView nameTxt = (TextView) convertView.findViewById(R.id.name);
+        // ImageView img = (ImageView) convertView.findViewById(R.id.imageView);
+
+        //  t = (TextView)findViewById(R.id.TextView01);
+        textView = (TextView) convertView.findViewById(R.id.grid_item);
+        //  t.setOnClickListener(this);
+
+        // Set Data
+        textView.setText(items.get(position));
+
+        // img.setImageResource(items.get(position).getImg());
 
         return convertView;
     }
@@ -53,8 +69,52 @@ public class CustomGridAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return items.indexOf(getItem(position));
     }
 
 
+    @Override
+    public Filter getFilter()
+    {
+        return new Filter(){
+            @Override
+            protected Filter.FilterResults performFiltering(CharSequence constraint)
+            {
+                Filter.FilterResults results = new Filter.FilterResults();
+                ArrayList<String> filters = new ArrayList<String>();
+                if(constraint.length() == 0)
+                {
+                    results.values = items;
+                    results.count = items.size();
+                    return results;
+                }
+                if(constraint != null && constraint.length() >0)
+                {
+                    // Constarint to upper
+                    constraint = constraint.toString().toLowerCase();
+
+
+                    for(int i=0; i<filterList.size();i++)
+                    {
+                        if(filterList.get(i).contains(constraint))
+                        {
+                            filters.add(filterList.get(i));
+                        }
+
+                    }
+
+                }
+                results.values = filters;
+                results.count = filters.size();
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, Filter.FilterResults results)
+            {
+                items = (ArrayList<String>) results.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
 }
