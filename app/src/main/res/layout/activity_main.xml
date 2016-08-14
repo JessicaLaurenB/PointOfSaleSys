@@ -38,13 +38,18 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></LinearLayout>
+            android:layout_height="wrap_content">
+
+        </LinearLayout>
 
         <GridView
             android:layout_width="wrap_content"
             android:layout_height="459dp"
             android:id="@+id/gridView"
-            android:numColumns="3" />
+            android:numColumns="3"
+            android:onClick="onClick"
+            android:clickable="true"/>
+
 
     </LinearLayout>
 

@@ -24,6 +24,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 
+import java.util.List;
+import android.view.LayoutInflater;
+
+
 import static android.R.layout.simple_list_item_1;
 
 public class MainActivity extends AppCompatActivity  {
@@ -39,9 +43,10 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        final ArrayList<String> buttons = new ArrayList<String>();
+        SearchView searchView = (SearchView) findViewById(R.id.searchView);
+        final ArrayList<String> textView = new ArrayList<String>();
         final GridView employeeGrid = (GridView) findViewById(R.id.gridView);
-        CustomGridAdapter gridAdapter;
+        final CustomGridAdapter gridAdapter;
 
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -53,11 +58,11 @@ public class MainActivity extends AppCompatActivity  {
 
         for (int i = 0; i < 100; i++)
         {
-            buttons.add("employee" + (i+1));
+            textView.add("employee" + (i+1));
         }
-        gridAdapter = new CustomGridAdapter(MainActivity.this,buttons);
+        gridAdapter = new CustomGridAdapter(MainActivity.this,textView);
         employeeGrid.setAdapter(gridAdapter);
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, simple_list_item_1,buttons);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, simple_list_item_1,textView);
 //        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
         employeeGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -66,7 +71,19 @@ public class MainActivity extends AppCompatActivity  {
                 Log.i("ITEM_CLICKED", "" + (String) (employeeGrid.getItemAtPosition(position)));
             }
         });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String s) {
+                gridAdapter.getFilter().filter(s);
+
+                return false;
+            }
+        });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
